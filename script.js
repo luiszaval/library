@@ -18,20 +18,21 @@ let key = 1;
 let keyToBeDeleted = '';
 
 //Book Model
-function Book(title, author, pages, read, key, createHTML) {
+function Book(title, author, pages, read, key, bgColor, createHTML) {
     this.title = title;
     this.author = author;
     this.pages = pages;
     this.read = read;
     this.key = key;
+    this.bgColor = bgColor;
     this.info = function () {
         return `${this.title} by ${this.author}, ${this.pages} pages, ${this.read ? `read` : `not read yet`}.`
     };
-    this.HTML = createHTML(this.title, this.author, this.pages, this.read, this.key);
+    this.HTML = createHTML(this.title, this.author, this.pages, this.read, this.bgColor, this.key);
 };
 
 
-function createHTML(bkTitle, bkAuthor, totalPages, read, key) {
+function createHTML(bkTitle, bkAuthor, totalPages, read, bgColor, key) {
     //create new HTML elements
     const bookDiv = document.createElement('div');
     const bookInfo = document.createElement('div');
@@ -51,16 +52,14 @@ function createHTML(bkTitle, bkAuthor, totalPages, read, key) {
     bookDiv.setAttribute('key', `${key}`)
 
     //add CSS classes
-    debugger;
-    !read ? bookDiv.classList.add('not-read') : null
+    if(!read) bookDiv.classList.add('not-read')
     bookDiv.classList.add('center');
     deleteBtn.classList.add('delete')
     title.classList.add('title');
     author.classList.add('author')
     pages.classList.add('pages')
     bookInfo.classList.add('card');
-    let bgColor = colors[Math.floor(Math.random() * colors.length)];
-    bookInfo.style.backgroundColor = bgColor
+    bookInfo.style.backgroundColor = bgColor;
     console.log(bgColor)
     divider.classList.add('line');
     bookFooter.classList.add('footer')
@@ -95,8 +94,13 @@ function triggerConfirmModal(){
 function handleSubmit(e) {
     e.preventDefault();
     const newBook = {}
+    console.log(form.elements)
     for (let input of form.elements) {
-        newBook[input.name] = input.value
+        if(input.name === "read"){
+            newBook[input.name] = input.checked;
+        }else{
+            newBook[input.name] = input.value
+        }
     }
     console.log({newBook})
     addBookToLibrary(newBook)
@@ -105,10 +109,15 @@ function handleSubmit(e) {
 
 function addBookToLibrary(newBook) {
     const { title, author, pages, read } = newBook
-    const newBookModel = new Book(title, author, pages, read, key, createHTML);
+    const bgColor = newBook.bgColor || colors[Math.floor(Math.random() * colors.length)];
+    const newBookModel = new Book(title, author, pages, read, key, bgColor, createHTML);
     myLibrary.push(newBookModel);
     console.log({myLibrary, newBookModel, newBook})
     bookDisplay(myLibrary);
+    for (book of myLibrary){
+        localStorage.setItem(book.key, JSON.stringify(book))
+    }
+    
     key++
 };
 
@@ -122,7 +131,11 @@ function bookDisplay(library) {
 
 function resetModal(formElements){
     for (let input of formElements) {
-        input.value = ''
+        if (input.name === "read") {
+            input.checked = true;
+        } else {
+            input.value = ''
+        }
     };
     triggerAddBkModal();
 };
@@ -134,10 +147,24 @@ function handleDelete(e) {
 
 function removeBook(){
     myLibrary = myLibrary.filter(book => book.key != keyToBeDeleted)
+    localStorage.removeItem(keyToBeDeleted);
     bookDisplay(myLibrary);
     triggerConfirmModal();
     keyToBeDeleted = '';
 };
+
+function handlePageLoad(){
+    if(!localStorage.length){
+        triggerAddBkModal()
+    }else{
+        for (let i = 0; i < localStorage.length; i++) {
+            addBookToLibrary(JSON.parse((localStorage.getItem(localStorage.key(i)))));
+        }
+        // let storageLibrary = Array.from(JSON.parse(localStorage.getItem('myLibrary')));
+        // for(book of storageLibrary){
+        //     addBookToLibrary(book)
+    }
+}
 
 //EVENT LISTENERS
 addBookBtn.addEventListener('click',triggerAddBkModal)
@@ -146,17 +173,13 @@ submitFormBtn.addEventListener('click', handleSubmit)
 
 cancelFormBtn.addEventListener('click', triggerAddBkModal)
 
-bgWrapper.addEventListener('click', ()=>{
-    return addBookModal.classList.contains('show') ? triggerAddBkModal() : triggerConfirmModal();
-})
+bgWrapper.addEventListener('click', () => addBookModal.classList.contains('show') ? triggerAddBkModal() : triggerConfirmModal())
 
 confirmBtn.addEventListener('click', removeBook)
 
 cancelConfirmBtn.addEventListener('click', triggerConfirmModal)
 
-window.addEventListener('load', ()=>{
-    triggerAddBkModal();
-})
+window.addEventListener('load', handlePageLoad)
 
 /* For Modal
 1. Body needs a class for blackout
