@@ -1,0 +1,185 @@
+html{
+    margin: 0;
+    padding: 0;
+}
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 30px;
+    background: linear-gradient(to right, #ffa751, #ffe259); 
+    font-family: 'Oxygen', sans-serif;
+    flex-wrap: wrap;
+}
+#bookDisplay{
+    display: flex;
+	flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+}
+
+.form-group{
+    margin: 30px;
+    display: flex;
+    flex-direction: column;
+}
+.card{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: 1px solid black;
+    padding: 30px;
+    height: 200px;
+    width: 150px;
+    box-shadow:20px 20px 50px black;
+    position: relative;
+}
+
+.custom-button:focus {
+	outline:none;
+}
+.custom-button{
+    color: rgb(78, 20, 20);
+	font-size: 1em;
+	padding: 5px 10px;
+	background-color: #fe8c00;
+	font-weight: 500;
+	border: 1px solid black;
+	border-radius: 5px;
+    cursor: pointer;
+    transition: .5s;
+    font-family: 'Oxygen', sans-serif;
+}
+.custom-button:hover {
+	opacity: .9;
+}
+label{
+    justify-content:flex-start;
+}
+.title{
+    width: 100%;
+    align-self: start;
+    font-size: 1.5em;
+    color: white;
+    overflow: hidden;
+    word-wrap: break-word;
+    max-height: 75%;
+    font-weight: 900;
+}
+.author{
+    align-self: start;
+    color: white;
+    width: 100%;
+    overflow: hidden;
+    word-wrap: break-word;
+    font-size: 1em;
+    max-height: 25%;
+}
+.line{
+    background-color: black;
+    height: 5px;
+    width: 75%;
+    align-self: start;
+    margin: 5px 0px;
+}
+.footer{
+    background-color:black;
+    width: 100%;
+    height: 50px;
+    margin-bottom:10px;
+    box-shadow: 20px 20px 50px #000000;
+}
+
+.wrapper{
+    position: absolute;
+    z-index: 1010;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .10);
+    display: none;
+}
+
+form{
+    height: 50vh;
+    width: 50vw;
+    max-width: 300px;
+    background-color: #4E1D04;
+    position: absolute;
+    top: 25%;
+    padding: 30px;
+    z-index: 1011;
+    color: white;
+    border-radius: 25px;
+    box-shadow: 10px 10px 50px #000000;
+    display: none;
+}
+
+.center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+#buttons{
+    display: flex;
+    justify-content: space-evenly;
+}
+.delete{
+    position: absolute;
+    top: 0px;
+    right: 3px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 900;
+}
+.delete:hover{
+    color: white;
+}
+.confirmModal{
+    height: 25vh;
+    width: 50vw;
+    max-width: 300px;
+    background-color: #4E1D04;
+    position: absolute;
+    top: 25%;
+    z-index: 1012;
+    color: white;
+    border-radius: 25px;
+    box-shadow: 10px 10px 50px #000000;
+    display: none;
+}
+.show{
+    display: block;
+}
+.hide{
+    opacity: .2;
+}
+.showConfirm{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.confirm-group{
+    margin: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.pages{
+    color: white;
+    position: absolute;
+    bottom: 0;
+    right: 5px;
+}
+.read-group{
+    margin: 30px;
+    display: flex;
+    gap: 10px;
+}
+.not-read{
+    opacity: .5;
+}
