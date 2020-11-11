@@ -85,41 +85,56 @@ function triggerAddBkModal(){
     addBookBtn.classList.toggle('hide');
 };
 
+function handleSubmit(e) {
+    e.preventDefault();
+    const newBook = {}
+    for (let input of form.elements) {
+        if (input.name === "read") {
+            newBook[input.name] = input.checked;
+        } else {
+            newBook[input.name] = input.value
+        }
+    }
+    addNewBookToLibrary(newBook)
+    resetModal(form.elements)
+};
+
+function addNewBookToLibrary(newBook) {
+    const { title, author, pages, read } = newBook
+    const bgColor = colors[Math.floor(Math.random() * colors.length)];
+    const newBookModel = new Book(title, author, pages, read, key, bgColor, createHTML);
+    myLibrary.push(newBookModel);
+    bookDisplay(myLibrary);
+    localStorage.setItem(newBookModel.key, JSON.stringify(newBookModel))
+    key++
+};
+
+function handleStorageBooks(){
+    let max = -Infinity
+    for (const [bookKey] of Object.entries(localStorage)){
+        max = Math.max(max, +bookKey)
+    }
+    key = max + 1;
+    addStorageBooksToLibrary()
+}
+
+function addStorageBooksToLibrary(){
+    for (let i = 0; i < localStorage.length; i++) {
+        let bookInfo = (JSON.parse((localStorage.getItem(localStorage.key(i)))));
+        let { title, author, pages, read, bgColor } = bookInfo
+        let bookModel = new Book(title, author, pages, read, key, bgColor, createHTML);
+        myLibrary.push(bookModel);
+    }
+    bookDisplay(myLibrary);
+}
+
 function triggerConfirmModal(){
     bgWrapper.classList.toggle('show');
     confirmModal.classList.toggle('showConfirm');
     addBookBtn.classList.toggle('hide');
 };
 
-function handleSubmit(e) {
-    e.preventDefault();
-    const newBook = {}
-    console.log(form.elements)
-    for (let input of form.elements) {
-        if(input.name === "read"){
-            newBook[input.name] = input.checked;
-        }else{
-            newBook[input.name] = input.value
-        }
-    }
-    console.log({newBook})
-    addBookToLibrary(newBook)
-    resetModal(form.elements)
-};
 
-function addBookToLibrary(newBook) {
-    const { title, author, pages, read } = newBook
-    const bgColor = newBook.bgColor || colors[Math.floor(Math.random() * colors.length)];
-    const newBookModel = new Book(title, author, pages, read, key, bgColor, createHTML);
-    myLibrary.push(newBookModel);
-    console.log({myLibrary, newBookModel, newBook})
-    bookDisplay(myLibrary);
-    for (book of myLibrary){
-        localStorage.setItem(book.key, JSON.stringify(book))
-    }
-    
-    key++
-};
 
 function bookDisplay(library) {
     bookContainer.textContent = '';
@@ -153,20 +168,11 @@ function removeBook(){
     keyToBeDeleted = '';
 };
 
-function handlePageLoad(){
-    if(!localStorage.length){
-        triggerAddBkModal()
-    }else{
-        for (let i = 0; i < localStorage.length; i++) {
-            addBookToLibrary(JSON.parse((localStorage.getItem(localStorage.key(i)))));
-        }
-        // let storageLibrary = Array.from(JSON.parse(localStorage.getItem('myLibrary')));
-        // for(book of storageLibrary){
-        //     addBookToLibrary(book)
-    }
-}
+
 
 //EVENT LISTENERS
+window.addEventListener('load', () => localStorage.length ? handleStorageBooks() : triggerAddBkModal())
+
 addBookBtn.addEventListener('click',triggerAddBkModal)
 
 submitFormBtn.addEventListener('click', handleSubmit)
@@ -179,7 +185,14 @@ confirmBtn.addEventListener('click', removeBook)
 
 cancelConfirmBtn.addEventListener('click', triggerConfirmModal)
 
-window.addEventListener('load', handlePageLoad)
+
+/*EXAMPLES
+
+IN LOCAL STORAGE
+JSON.stringify(newBookModel) => { "title": "The Hobbit", "author": "J.R.R. Tolkien ", "pages": "202", "read": true, "key": 1, "bgColor": "#DCBE87", "HTML": { } }
+
+*/
+
 
 /* For Modal
 1. Body needs a class for blackout
