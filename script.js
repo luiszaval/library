@@ -161,7 +161,6 @@ function handleDelete(e) {
 };
 
 function removeBook(){
-    debugger;
     myLibrary = myLibrary.filter(book => book.key != keyToBeDeleted)
     localStorage.removeItem(keyToBeDeleted);
     bookDisplay(myLibrary);
