@@ -121,7 +121,7 @@ function handleStorageBooks(){
 function addStorageBooksToLibrary(){
     for (let i = 0; i < localStorage.length; i++) {
         let bookInfo = (JSON.parse((localStorage.getItem(localStorage.key(i)))));
-        let { title, author, pages, read, bgColor } = bookInfo
+        let { title, author, pages, read, bgColor, key } = bookInfo
         let bookModel = new Book(title, author, pages, read, key, bgColor, createHTML);
         myLibrary.push(bookModel);
     }
@@ -136,9 +136,9 @@ function triggerConfirmModal(){
 
 
 
-function bookDisplay(library) {
+function bookDisplay(myLibrary) {
     bookContainer.textContent = '';
-    return library.map(book => {
+    return myLibrary.map(book => {
         const bookDiv = book.HTML
         bookContainer.appendChild(bookDiv);
     })
@@ -161,6 +161,7 @@ function handleDelete(e) {
 };
 
 function removeBook(){
+    debugger;
     myLibrary = myLibrary.filter(book => book.key != keyToBeDeleted)
     localStorage.removeItem(keyToBeDeleted);
     bookDisplay(myLibrary);
@@ -186,31 +187,12 @@ confirmBtn.addEventListener('click', removeBook)
 cancelConfirmBtn.addEventListener('click', triggerConfirmModal)
 
 
-/*EXAMPLES
-
-IN LOCAL STORAGE
-JSON.stringify(newBookModel) => { "title": "The Hobbit", "author": "J.R.R. Tolkien ", "pages": "202", "read": true, "key": 1, "bgColor": "#DCBE87", "HTML": { } }
-
-*/
 
 
-/* For Modal
-1. Body needs a class for blackout
-2. Button needs a class for popup trigger
-3. Modal needs a popup Modal class
-4. popup Modal close class
-5. CSS class for is_visible
-6. CSS class for is-black-out
 
-*/
 
 /*Examples:
-newBook => {title: "Hobbit", author: "Lowry", pages: "101", read: "on", "": ""}
-newBookModel => Book:{title: "Hobbit", author: "Lowry", pages: "101", read: "on", info()}
-myLibrary => [
-    Book:{title: "Hobbit", author: "Lowry", pages: "101", read: "on", info()},
-    Book:{title: "Hobbit", author: "Lowry", pages: "101", read: "on", info()}
-]
+createHTML() =>
 <div id="bookContainer">
     <div id="bookDiv">
         <div id="bookInfo">
@@ -225,44 +207,8 @@ myLibrary => [
 
 */
 
-/*FLOW
-1. User click on create new book button
-2. Modal pops up
-3. User enters book information
-4. On input changes we should be storing user input temporarily
-    maybe add on on keydown event listener in the form inputs
-5. On enter we need to capture infomation entered
-    may not need to do step 4 as we are able to capture all info in this step
-6. Send info over to create a new bookModal
-7. add bgColor to book modal
-8. call on html function to create html for each book
-    Figure out best way to do this
-7. Add bookModal to myLibrary storage (array or object???)
-8. loop through each entry of the array and append each book.html to the bookContainer
-*/
-
-
-
-
-
 /* TODO
-    1. FUNCTION Book()
-        Make a Book object wherein you pass book details in order to initialize a new book
-    2. FUNCTION addBookToLibrary()
-        take users input and store book into an array
-    3. myLibrary = []
-        array to store all books
-    4. FUNCTION bookDisplay()
-        loops through the array and display each book
-    5. Add a new book BTN
-        brings up form and allows user to insert new book into library
-    6. Remove book BTN
-        allows user to remove selected book on click
-    7. Read status BTN
-        allows user to trigger on click
-    8. localStorage
-        save user input in localStorage
-    9. Firebase
+    1. Firebase
         save user input to a server in the cloud
     
 */
@@ -276,17 +222,6 @@ myLibrary => [
         - Set up the bookDisplay function to be more readable
     3. How best to store book model, as an object into the array, as an object of obect?? 
         - Look at Konrad's comment on mapping
-    4. Add styling to Form
-    5.Adjust styling for buttons
-    6. Add book themes
-        - google library color schemes like earlier
-    7. Add form validation
-    8. Figure out how to display total number of pages
-    9. Figure out how to check off that a book has been read
-    10. Find a better way to delete a book
-        - ask for user confirmation
-    11. Adjust book display, should be a grid that wraps around
-    12. Form should be displayed before book display
-    13. EXTRA EXTRA add brown shelving css
+    4. Add form validation
 */
 
